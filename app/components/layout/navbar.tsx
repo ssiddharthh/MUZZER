@@ -52,11 +52,21 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-50 border-b border-border/80 bg-background/80 backdrop-blur-xl">
       <div className="container-app flex h-16 items-center justify-between gap-4">
-        <Link href="/" className="flex items-center gap-2 font-semibold tracking-tight">
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand text-sm text-white shadow-glow">
-            M
+        <Link
+          href="/"
+          className="group flex items-center gap-3 rounded-3xl border border-border bg-surface/80 px-3 py-2 transition hover:border-brand hover:bg-brand/10"
+        >
+          <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-brand via-violet-500 to-fuchsia-500 text-lg font-bold text-white shadow-glow">
+            <span aria-hidden>♫</span>
           </span>
-          <span>MUZZER</span>
+          <span className="flex flex-col leading-tight">
+            <span className="text-sm font-semibold uppercase tracking-[0.28em] text-brand">
+              MUZZER
+            </span>
+            <span className="text-[0.72rem] font-medium text-muted">
+              Crowd-powered music queue
+            </span>
+          </span>
         </Link>
 
         <nav className="hidden items-center gap-1 md:flex" aria-label="Main navigation">

@@ -16,6 +16,8 @@ export function useStreams() {
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isVoting, setIsVoting] = useState<string | null>(null);
+  const [autoPlayEnabled, setAutoPlayEnabled] = useState(true);
+  const [pollInterval, setPollInterval] = useState<NodeJS.Timeout | null>(null);
 
   const loadStreams = useCallback(async () => {
     setIsLoading(true);
@@ -33,9 +35,39 @@ export function useStreams() {
     }
   }, []);
 
+  // Set up polling to keep queue updated (every 3 seconds)
   useEffect(() => {
     void loadStreams();
+
+    const interval = setInterval(() => {
+      void loadStreams();
+    }, 3000);
+
+    setPollInterval(interval);
+
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
   }, [loadStreams]);
+
+  const playNext = useCallback(async () => {
+    if (!autoPlayEnabled || streams.length <= 1) {
+      return;
+    }
+
+    try {
+      setError(null);
+      await loadStreams();
+    } catch (playNextError) {
+      setError(
+        playNextError instanceof Error
+          ? playNextError.message
+          : "Failed to load next track",
+      );
+    }
+  }, [autoPlayEnabled, streams.length, loadStreams]);
 
   const addStream = useCallback(
     async (url: string) => {
@@ -83,15 +115,50 @@ export function useStreams() {
     [loadStreams],
   );
 
+  const markAsPlayed = useCallback(async (streamId: string) => {
+    try {
+      setError(null);
+      // Call API to mark stream as played (requires new endpoint)
+      const response = await fetch(`/api/streams/${streamId}/played`, {
+        method: "POST",
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to mark stream as played");
+      }
+
+      await loadStreams();
+    } catch (playedError) {
+      setError(
+        playedError instanceof Error
+          ? playedError.message
+          : "Failed to mark track as played",
+      );
+    }
+  }, [loadStreams]);
+
+  // Cleanup polling on unmount
+  useEffect(() => {
+    return () => {
+      if (pollInterval) {
+        clearInterval(pollInterval);
+      }
+    };
+  }, [pollInterval]);
+
   return {
     streams,
     isLoading,
     error,
     isSubmitting,
     isVoting,
+    autoPlayEnabled,
+    setAutoPlayEnabled,
     loadStreams,
     addStream,
     toggleVote,
+    playNext,
+    markAsPlayed,
     setError,
   };
 }

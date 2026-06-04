@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth";
 
 import { authOptions } from "@/app/lib/auth-options";
 import { prisma } from "@/app/lib/prisma";
+import { Provider as PrismaProvider } from "@/app/generated/prisma/client";
 
 export async function getCurrentUser() {
   const session = await getServerSession(authOptions);
@@ -16,7 +17,7 @@ export async function getCurrentUser() {
     update: {},
     create: {
       email,
-      provider: "Google",
+      provider: PrismaProvider.Google,
     },
   });
 }

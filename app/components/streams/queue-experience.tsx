@@ -38,8 +38,11 @@ export function QueueExperience({
     error,
     isSubmitting,
     isVoting,
+    autoPlayEnabled,
+    setAutoPlayEnabled,
     addStream,
     toggleVote,
+    playNext,
   } = useStreams();
 
   const filteredStreams = useMemo(() => {
@@ -53,6 +56,12 @@ export function QueueExperience({
   const nowPlaying = filteredStreams[0] ?? null;
   const canVote = status === "authenticated";
 
+  const handleVideoEnd = () => {
+    if (autoPlayEnabled) {
+      void playNext();
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div>
@@ -63,12 +72,27 @@ export function QueueExperience({
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
         <Card>
           <CardHeader>
-            <CardTitle>Now playing</CardTitle>
-            <CardDescription>
-              The highest-voted active track in the queue.
-            </CardDescription>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle>Now playing</CardTitle>
+                <CardDescription>
+                  The highest-voted active track in the queue.
+                </CardDescription>
+              </div>
+              <button
+                onClick={() => setAutoPlayEnabled(!autoPlayEnabled)}
+                className={`rounded-lg px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] transition ${
+                  autoPlayEnabled
+                    ? "bg-brand text-white"
+                    : "border border-border bg-surface text-muted hover:bg-surface-elevated"
+                }`}
+                title={autoPlayEnabled ? "Auto-play enabled" : "Auto-play disabled"}
+              >
+                {autoPlayEnabled ? "Auto-play ON" : "Auto-play OFF"}
+              </button>
+            </div>
           </CardHeader>
-          <MediaPlayer stream={nowPlaying} />
+          <MediaPlayer stream={nowPlaying} onVideoEnd={handleVideoEnd} />
         </Card>
 
         {showSubmitForm ? (

@@ -1,65 +1,90 @@
-import Image from "next/image";
+import Link from "next/link";
 
-export default function Home() {
+import { PageShell } from "@/app/components/layout/page-shell";
+import { Button } from "@/app/components/ui/button";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/app/components/ui/card";
+
+const features = [
+  {
+    title: "Live audience queue",
+    description:
+      "Collect YouTube and Spotify requests in one shared queue for your stream or event.",
+  },
+  {
+    title: "Vote to prioritize",
+    description:
+      "Listeners upvote their favorite tracks so the most popular request plays next.",
+  },
+  {
+    title: "Built for creators",
+    description:
+      "Dashboard tools help streamers submit tracks, monitor requests, and manage sessions.",
+  },
+];
+
+export default function LandingPage() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <PageShell>
+      <section className="container-app py-16 sm:py-24">
+        <div className="mx-auto max-w-3xl text-center">
+          <p className="mb-4 inline-flex rounded-full border border-brand/30 bg-brand-soft px-3 py-1 text-xs font-medium uppercase tracking-[0.2em] text-brand">
+            Music streaming SaaS
           </p>
+          <h1 className="text-4xl font-semibold tracking-tight sm:text-6xl">
+            Turn your audience requests into a live music queue
+          </h1>
+          <p className="mt-5 text-base text-muted sm:text-lg">
+            MUZZER helps streamers and hosts collect YouTube and Spotify links,
+            rank them with upvotes, and keep the session moving with a beautiful
+            shared queue experience.
+          </p>
+          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <Link href="/queue">
+              <Button size="lg">View live queue</Button>
+            </Link>
+            <Link href="/login">
+              <Button size="lg" variant="secondary">
+                Sign in with Google
+              </Button>
+            </Link>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <div className="mt-16 grid gap-4 md:grid-cols-3">
+          {features.map((feature) => (
+            <Card key={feature.title}>
+              <CardHeader>
+                <CardTitle>{feature.title}</CardTitle>
+                <CardDescription>{feature.description}</CardDescription>
+              </CardHeader>
+            </Card>
+          ))}
         </div>
-      </main>
-    </div>
+      </section>
+
+      <section className="container-app pb-20">
+        <div className="glass-panel grid gap-6 p-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
+          <div>
+            <h2 className="text-2xl font-semibold tracking-tight">
+              Ready to run your next session?
+            </h2>
+            <p className="mt-3 text-sm text-muted sm:text-base">
+              Open the dashboard to submit tracks, share the public queue with your
+              audience, and let votes decide what plays next.
+            </p>
+          </div>
+          <div className="flex flex-col gap-3 sm:flex-row lg:justify-end">
+            <Link href="/dashboard">
+              <Button className="w-full sm:w-auto">Go to dashboard</Button>
+            </Link>
+            <Link href="/dashboard/streams/new">
+              <Button className="w-full sm:w-auto" variant="secondary">
+                Add a track
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+    </PageShell>
   );
 }

@@ -1,0 +1,67 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  provider  Provider
+  role      Role     @default(EndUser)
+  streams   Stream[]
+  upvotes   Upvote[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Stream {
+  id          String     @id @default(uuid())
+  type        StreamType
+  url         String
+  extractedId String
+  title       String?
+  smallImg    String?
+  bigImg      String?
+  active      Boolean    @default(true)
+  upvotes     Upvote[]
+  userId      String
+  user        User       @relation(fields: [userId], references: [id])
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@unique([userId, extractedId])
+}
+
+model Upvote {
+  id        String   @id @default(uuid())
+  userId    String
+  streamId  String
+  user      User     @relation(fields: [userId], references: [id])
+  stream    Stream   @relation(fields: [streamId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@unique([userId, streamId])
+}
+
+enum StreamType {
+  Spotify
+  Youtube
+}
+
+enum Role {
+  Streamer 
+  EndUser
+}
+
+enum Provider {
+  Google
+}

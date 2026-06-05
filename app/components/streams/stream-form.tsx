@@ -92,14 +92,14 @@ export function StreamForm({
     <div className="space-y-4">
       <div className="flex justify-center gap-4 border-b border-border pb-4">
         <Button 
-          variant={platform === "youtube" ? "default" : "secondary"} 
+          variant={platform === "youtube" ? "primary" : "secondary"} 
           onClick={() => { setPlatform("youtube"); setResults([]); }}
           className="w-full sm:w-auto"
         >
           YouTube
         </Button>
         <Button 
-          variant={platform === "spotify" ? "default" : "secondary"} 
+          variant={platform === "spotify" ? "primary" : "secondary"} 
           onClick={() => { setPlatform("spotify"); setResults([]); }}
           className="w-full sm:w-auto"
         >

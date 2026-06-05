@@ -24,9 +24,19 @@ export function MediaPlayer({ stream, onVideoEnd }: MediaPlayerProps) {
   const playerRef = useRef<ReturnType<typeof YouTubePlayer> | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
+  const onVideoEndRef = useRef(onVideoEnd);
+  
+  // Keep the latest callback without re-triggering the effect
+  useEffect(() => {
+    onVideoEndRef.current = onVideoEnd;
+  }, [onVideoEnd]);
+
+  const extractedId = stream?.extractedId;
+  const streamType = stream?.type;
+
   // Initialize YouTube player and handle video completion
   useEffect(() => {
-    if (!stream || stream.type !== "Youtube" || !containerRef.current) {
+    if (!extractedId || streamType !== "Youtube" || !containerRef.current) {
       return;
     }
 
@@ -35,14 +45,14 @@ export function MediaPlayer({ stream, onVideoEnd }: MediaPlayerProps) {
     playerRef.current = player;
 
     // Set video and listen for events
-    player.loadVideoById(stream.extractedId);
+    player.loadVideoById(extractedId);
     player.playVideo();
 
     const handleStateChange = (event: any) => {
       const state = event?.data;
       // state === 0 means video ended
-      if (state === 0 && onVideoEnd) {
-        onVideoEnd();
+      if (state === 0 && onVideoEndRef.current) {
+        onVideoEndRef.current();
       }
     };
 
@@ -52,7 +62,7 @@ export function MediaPlayer({ stream, onVideoEnd }: MediaPlayerProps) {
       player.destroy();
       playerRef.current = null;
     };
-  }, [stream, onVideoEnd]);
+  }, [extractedId, streamType]);
 
   if (!stream) {
     return (

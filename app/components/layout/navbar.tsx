@@ -14,9 +14,7 @@ const publicLinks = [
 ];
 
 const appLinks = [
-  { href: "/dashboard", label: "Dashboard" },
-  { href: "/dashboard/streams/new", label: "Add track" },
-  { href: "/dashboard/queue", label: "My queue" },
+  { href: "/dashboard", label: "Studio Dashboard" },
 ];
 
 function NavLink({

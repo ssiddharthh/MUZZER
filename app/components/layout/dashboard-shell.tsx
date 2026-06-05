@@ -11,10 +11,7 @@ import { Spinner } from "@/app/components/ui/spinner";
 import { useUser } from "@/app/hooks/use-user";
 
 const sidebarLinks = [
-  { href: "/dashboard", label: "Overview" },
-  { href: "/dashboard/streams/new", label: "Add track" },
-  { href: "/dashboard/queue", label: "Queue management" },
-  { href: "/queue", label: "Live queue view" },
+  { href: "/dashboard", label: "Studio" },
 ];
 
 export function DashboardShell({ children }: { children: React.ReactNode }) {
@@ -44,40 +41,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   return (
     <PageShell showFooter={false}>
       <div className="container-app py-8 lg:py-10">
-        <div className="grid gap-8 lg:grid-cols-[15rem_minmax(0,1fr)]">
-          <aside className="glass-panel h-fit p-4">
-            <p className="mb-1 text-xs uppercase tracking-[0.2em] text-muted">
-              Dashboard
-            </p>
-            <p className="mb-4 truncate text-sm font-medium">{user?.email}</p>
-            <nav className="flex flex-col gap-1" aria-label="Dashboard">
-              {sidebarLinks.map((link) => {
-                const isActive =
-                  pathname === link.href || pathname.startsWith(`${link.href}/`);
-
-                return (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className={`rounded-lg px-3 py-2 text-sm transition ${isActive ? "bg-brand-soft text-brand" : "text-muted hover:bg-surface-elevated hover:text-foreground"}`}
-                  >
-                    {link.label}
-                  </Link>
-                );
-              })}
-              {isStreamer ? (
-                <Link
-                  href="/admin/streams"
-                  className={`rounded-lg px-3 py-2 text-sm transition ${pathname.startsWith("/admin") ? "bg-brand-soft text-brand" : "text-muted hover:bg-surface-elevated hover:text-foreground"}`}
-                >
-                  Admin streams
-                </Link>
-              ) : null}
-            </nav>
-          </aside>
-
-          <section className="min-w-0 space-y-6">{children}</section>
-        </div>
+        <section className="min-w-0 space-y-6">{children}</section>
       </div>
     </PageShell>
   );

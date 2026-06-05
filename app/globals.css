@@ -4,24 +4,24 @@
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 
-  --color-background: #07070b;
-  --color-surface: #111118;
-  --color-surface-elevated: #181822;
-  --color-border: #2a2a38;
-  --color-border-strong: #3a3a4d;
-  --color-foreground: #f4f4f8;
-  --color-muted: #9b9bb0;
-  --color-brand: #8b5cf6;
-  --color-brand-strong: #7c3aed;
-  --color-brand-soft: #2a1f45;
+  --color-background: #0a0a0a;
+  --color-surface: #111111;
+  --color-surface-elevated: #1a1a1a;
+  --color-border: #262626;
+  --color-border-strong: #333333;
+  --color-foreground: #fafafa;
+  --color-muted: #a3a3a3;
+  --color-brand: #3b82f6;
+  --color-brand-strong: #2563eb;
+  --color-brand-soft: #1e3a8a;
   --color-success: #22c55e;
   --color-danger: #ef4444;
   --color-warning: #f59e0b;
   --color-spotify: #1db954;
-  --color-youtube: #ff0033;
+  --color-youtube: #ff0000;
 
-  --shadow-glow: 0 0 40px rgb(139 92 246 / 0.18);
-  --radius-card: 1rem;
+  --shadow-glow: none;
+  --radius-card: 0.75rem;
 }
 
 @layer base {
@@ -33,11 +33,23 @@
     @apply scroll-smooth;
   }
 
+  @keyframes pulse-slow {
+    0%, 100% { opacity: 0.8; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.05); }
+  }
+
   body {
-    @apply min-h-screen bg-background font-sans text-foreground antialiased;
-    background-image:
-      radial-gradient(circle at top, rgb(139 92 246 / 0.12), transparent 32%),
-      linear-gradient(180deg, #07070b 0%, #0b0b12 100%);
+    @apply min-h-screen font-sans text-foreground antialiased;
+    background-color: #030014;
+    background-image: 
+      radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.15), transparent 35%),
+      radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.15), transparent 35%),
+      radial-gradient(circle at 50% 80%, rgba(217, 70, 239, 0.1), transparent 40%);
+    background-attachment: fixed;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply tracking-tight;
   }
 
   ::selection {
@@ -51,7 +63,7 @@
   }
 
   .glass-panel {
-    @apply rounded-[var(--radius-card)] border border-border bg-surface/80 backdrop-blur-xl;
+    @apply rounded-[var(--radius-card)] border border-white/10 bg-surface/50 backdrop-blur-2xl shadow-2xl;
   }
 
   .focus-ring {

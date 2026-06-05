@@ -20,7 +20,11 @@ export function useStreams() {
   const [pollInterval, setPollInterval] = useState<NodeJS.Timeout | null>(null);
 
   const loadStreams = useCallback(async () => {
-    setIsLoading(true);
+    setIsLoading((prev) => {
+      // If we already have streams, don't show the loading spinner again
+      // to prevent UI flickering during polling
+      return prev; 
+    });
     setError(null);
 
     try {

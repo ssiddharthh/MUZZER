@@ -43,6 +43,7 @@ export function QueueExperience({
     addStream,
     toggleVote,
     playNext,
+    markAsPlayed,
   } = useStreams();
 
   const filteredStreams = useMemo(() => {
@@ -57,8 +58,8 @@ export function QueueExperience({
   const canVote = status === "authenticated";
 
   const handleVideoEnd = () => {
-    if (autoPlayEnabled) {
-      void playNext();
+    if (autoPlayEnabled && nowPlaying) {
+      void markAsPlayed(nowPlaying.id);
     }
   };
 

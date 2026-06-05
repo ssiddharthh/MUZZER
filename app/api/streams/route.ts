@@ -73,6 +73,37 @@ function parseStreamUrl(value: unknown) {
   return null;
 }
 
+async function fetchMetadata(type: "Youtube" | "Spotify", url: string) {
+  try {
+    if (type === "Youtube") {
+      const oembedUrl = `https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json`;
+      const res = await fetch(oembedUrl);
+      if (res.ok) {
+        const data = await res.json();
+        return {
+          title: data.title || url,
+          smallImg: data.thumbnail_url || null,
+          bigImg: data.thumbnail_url?.replace("hqdefault", "maxresdefault") || data.thumbnail_url || null,
+        };
+      }
+    } else if (type === "Spotify") {
+      const oembedUrl = `https://open.spotify.com/oembed?url=${encodeURIComponent(url)}`;
+      const res = await fetch(oembedUrl);
+      if (res.ok) {
+        const data = await res.json();
+        return {
+          title: data.title || url,
+          smallImg: data.thumbnail_url || null,
+          bigImg: data.thumbnail_url || null,
+        };
+      }
+    }
+  } catch (error) {
+    console.error("Error fetching metadata:", error);
+  }
+  return { title: url, smallImg: null, bigImg: null };
+}
+
 export async function POST(request: Request) {
   const user = await getCurrentUser();
 
@@ -95,6 +126,8 @@ export async function POST(request: Request) {
     );
   }
 
+  const metadata = await fetchMetadata(streamInput.type, streamInput.url);
+
   const stream = await prisma.stream.upsert({
     where: {
       userId_extractedId: {
@@ -104,11 +137,18 @@ export async function POST(request: Request) {
     },
     update: {
       active: true,
-      title: streamInput.title,
+      title: metadata.title,
+      smallImg: metadata.smallImg,
+      bigImg: metadata.bigImg,
       url: streamInput.url,
     },
     create: {
-      ...streamInput,
+      type: streamInput.type,
+      extractedId: streamInput.extractedId,
+      url: streamInput.url,
+      title: metadata.title,
+      smallImg: metadata.smallImg,
+      bigImg: metadata.bigImg,
       userId: user.id,
     },
   });
